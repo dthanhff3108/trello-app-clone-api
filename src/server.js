@@ -1,5 +1,5 @@
 import express from 'express'
-
+import {test} from '*/utilities'
 const app = express()
 
 const hostname = 'localhost'
@@ -10,5 +10,5 @@ app.get('/',(req,res)=>{
 })
 
 app.listen(port,hostname,()=>{
-    console.log("hello");
+    console.log("hello duy thanh");
 })
