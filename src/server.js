@@ -1,7 +1,9 @@
 import express from 'express'
-import { connectDB, getDB } from './config/mongodb'
+import { connectDB } from './config/mongodb'
 import { env } from '*/config/environment.js'
-import { BoardModel } from '*/models/board.model'
+import { apiV1 } from '*/routes/v1'
+import { getDB } from '*/config/mongodb'
+import { ObjectId } from 'mongodb'
 
 connectDB()
     .then(() => console.log("Connected"))
@@ -12,17 +14,14 @@ connectDB()
     })
 
 
-
 const bootServer = () => {
     const app = express()
+    // Config req.body data
+    app.use(express.json())
+    app.use(express.urlencoded({ extended: true }))
 
-    app.get('/test', async (req,res)=>{
-        const dataSample = {
-            title : "hello",
-            columnOrder : [],
-        }
-        let newBoard = await BoardModel.createNew(dataSample)
-        console.log(newBoard);
+    app.use('/v1',apiV1)
+    app.get('/', async (req,res)=>{
         res.end('<h1>Hello TIzz</h1>')
     })
     
@@ -32,3 +31,4 @@ const bootServer = () => {
 }
 
 
+// createNew()

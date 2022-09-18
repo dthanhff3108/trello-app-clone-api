@@ -6,7 +6,7 @@ const client = new MongoClient(env.MONGODB_URI, {
     useUnifiedTopology: true, 
 });
 
-let dbInstance =null;
+let dbInstance = null;
 export const connectDB = async () => {
     await client.connect()
     dbInstance = client.db(env.DATABASE_NAME)
