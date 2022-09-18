@@ -7,7 +7,7 @@ const cardCollectionSchema = Joi.object({
     title: Joi.string().required().min(1).max(20),
     cover : Joi.string().default(null),
     createdAt : Joi.date().timestamp().default(Date.now()),
-    updatedAt : Joi.date().timestamp().default(null).$,
+    updatedAt : Joi.date().timestamp().default(null),
     _destroy : Joi.boolean().default(false)
 })
 
