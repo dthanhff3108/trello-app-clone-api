@@ -20,7 +20,6 @@ const createNew = async (data)=>{
         const results =  await getDB().collection(boardCollectionName).insertOne(value)
         return results
     }catch(err){
-        console.log("create");
         throw new Error(err)
     }
 }
@@ -30,7 +29,6 @@ const findOneById = async (id) => {
         const data = await getDB().collection(boardCollectionName).findOne({ _id:ObjectId(id)})
         return data
     }catch(err){
-        console.log("find");
         throw new Error(err)
     }
 }

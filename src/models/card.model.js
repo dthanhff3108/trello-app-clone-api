@@ -1,8 +1,10 @@
 import Joi from 'joi'
 import { getDB } from '*/config/mongodb'
+import { ObjectId } from 'mongodb'
+
 const cardCollectionName = 'cards'
 const cardCollectionSchema = Joi.object({
-    boarId : Joi.string().required(),
+    boardId : Joi.string().required(),
     columnId : Joi.string().required(),
     title: Joi.string().required().min(1).max(20),
     cover : Joi.string().default(null),
@@ -21,8 +23,17 @@ const createNew = async (data)=>{
         const results =  await getDB().collection(cardCollectionName).insertOne(value)
         return results
     }catch(err){
-        console.log(err);
+        throw new Error(err)
     }
 }
 
-export const CardModel = { createNew }
+const findOneById = async (id) => {
+    try{
+        const data = await getDB().collection(cardCollectionName).findOne({ _id:ObjectId(id)})
+        return data
+    }catch(err){
+        throw new Error(err)
+    }
+}
+
+export const CardModel = { createNew, findOneById }
