@@ -1,7 +1,4 @@
 import { BoardModel } from '*/models/board.model'
-import { getDB } from '*/config/mongodb'
-import { findOneById } from '*/models/board.model'
-import { ObjectId } from 'mongodb'
 
 const createNew = async (data)=>{
     try{
