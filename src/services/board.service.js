@@ -10,4 +10,16 @@ const createNew = async (data)=>{
     }
 }
 
-export const BoardService = { createNew }
+const getFullBoard = async (id)=>{
+    try{
+        const board = await BoardModel.getFullBoard(id)
+        board.columns.forEach(column=>{
+            column.cards = board.cards.filter(card=>card.columnId.toString() === column._id.toString())
+        })
+        delete board.cards
+        return board
+    } catch(err){
+        throw new Error(err)
+    }
+}
+export const BoardService = { createNew, getFullBoard }
