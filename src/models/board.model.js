@@ -24,6 +24,46 @@ const createNew = async (data)=>{
     }
 }
 
+const pushColumnOrder = async (boardId,columnId)=>{
+    try{
+        const results =  await getDB().collection(boardCollectionName).findOneAndUpdate(
+            { _id : ObjectId(boardId)},
+            { $push : { columnOrder : columnId }},
+            { returnDocument : "after" }
+        )
+        return results 
+    }catch(err){
+        throw new Error(err)
+    }
+}
+
+const getFullBoard = async (id)=>{
+    try{
+        const results =  await getDB().collection(boardCollectionName).aggregate([
+            { $match : { _id : ObjectId(id)} },
+            {
+                $lookup : { 
+                    from : "columns",
+                    localField : "_id",
+                    foreignField : "boardId",
+                    as : "columns"
+                }
+            },
+            {
+                $lookup : { 
+                    from : "cards",
+                    localField : "_id",
+                    foreignField : "boardId",
+                    as : "cards"
+                }
+            }
+        ]).toArray()
+        return results[0] || {}
+    }catch(err){
+        throw new Error(err)
+    }
+}
+
 const findOneById = async (id) => {
     try{
         const data = await getDB().collection(boardCollectionName).findOne({ _id:ObjectId(id)})
@@ -35,4 +75,4 @@ const findOneById = async (id) => {
 
 
 
-export const BoardModel = { createNew, findOneById }
+export const BoardModel = { createNew, findOneById, getFullBoard, pushColumnOrder }

@@ -1,4 +1,4 @@
-import Joi from 'joi'
+import Joi, { object } from 'joi'
 import { ObjectId } from 'mongodb'
 import { getDB } from '*/config/mongodb'
 
@@ -18,8 +18,25 @@ const validateSchema = async (data)=>{
 
 const createNew = async (data)=>{
     try{
-        const value = await validateSchema(data)
-        const results =  await getDB().collection(columnCollectionName).insertOne(value)
+        const validatedValue = await validateSchema(data)
+        const insertValue = {
+            ...validatedValue,
+            boardId : ObjectId(validatedValue.boardId)
+        }
+        const results =  await getDB().collection(columnCollectionName).insertOne(insertValue)
+        return results
+    }catch(err){
+        throw new Error(err)
+    }
+}
+
+const pushCardOrder = async (columnId, cardId)=>{
+    try{
+        const results =  await getDB().collection(columnCollectionName).findOneAndUpdate(
+            { _id : ObjectId(columnId)},
+            { $push : { cardOrder : cardId }},
+            { returnDocument : "after" }
+        )
         return results
     }catch(err){
         throw new Error(err)
@@ -48,4 +65,4 @@ const findOneById = async (id) => {
     }
 }
 
-export const ColumnModel = { createNew, findOneById, update }
+export const ColumnModel = { columnCollectionName, createNew, findOneById, update, pushCardOrder }
